@@ -59,12 +59,12 @@ async def get(client, message):
     for gname in group_names:
         pc = await get_participants(gname)
         groups[gname] = set([chatmember.user.id for chatmember in pc])
-        all_users |= set((chatmember.user.first_name, chatmember.user.id) for chatmember in pc)
+        all_users |= set((chatmember.user.username, chatmember.user.id) for chatmember in pc)
     
     response = []
     for user in all_users:
         gcount = 0
-        if user[0] is None or not user[0].isascii():
+        if user[0] is None:
             continue
         gs = []
         for gname in groups:
@@ -76,10 +76,10 @@ async def get(client, message):
             s = f'{user[0]} - ' + ', '.join(gs)
             response.append(s)
 
-    with open(f'result-{message.from_user.id}.txt', 'w') as file:
+    with open(f'results/result-{message.from_user.id}.txt', 'w') as file:
         file.write('\n'.join(response))
 
-    await message.reply_document(f'result-{message.from_user.id}.txt')
+    await message.reply_document(f'results/result-{message.from_user.id}.txt')
 
         
 app.run()
